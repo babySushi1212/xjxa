@@ -1,0 +1,48 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>GetAllResponseHeaders</title>
+</head>
+<body>
+
+<input type="button" value="getAllResponseHeaders"
+       onclick="getAllResponseHeaders()">
+<div id="showPanel"></div>
+
+<script>
+    let xhr = null;
+
+    function stateChanged() {
+        lookup = ['UNSENT', 'OPENED', 'HEADERS_RECEIVED', 'LOADING', 'DONE' ]
+        console.log('xhr state', lookup[xhr.readyState], 'xhr readyState', xhr.readyState);
+
+        //server端處理完畢了没
+        if (xhr.readyState == XMLHttpRequest.DONE) {
+
+            //request做成功了嗎
+            if (xhr.status == 200) {
+                alert(xhr.getAllResponseHeaders());
+            } else {
+                alert(xhr.status);
+            }
+        }
+
+    }
+
+    function getAllResponseHeaders() {
+
+        xhr = new XMLHttpRequest() // readyState: 0
+
+        // set XMLHttpRequest call back function
+        xhr.onreadystatechange = stateChanged;
+
+        //建立好Get連接
+        xhr.open('get', 'GetAllResponseHeaders.jsp', true); // readyState: 1
+
+        //送出請求
+        xhr.send(); // readyState: 2
+    }
+</script>
+</body>
+</html>

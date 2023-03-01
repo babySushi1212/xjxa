@@ -1,0 +1,29 @@
+﻿<!DOCTYPE html>
+<!-- Created on: 2009/7/3 -->
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>取得XML資料將其視為文字性資料</title>
+</head>
+<body>
+<input type="button" value="顯示員工資料" onclick="getXML();">
+<div id="showPanel"></div>
+
+<script>
+    fetch('').then()
+    function getXML() {
+        let xhr = new XMLHttpRequest();
+
+        xhr.addEventListener('load', () => {
+            if (xhr.status == 200) {
+                console.log(xhr.responseText);
+            } else {
+                alert(xhr.status);
+            }
+        })
+        xhr.open("Get", 'JONES.xml', true);
+        xhr.send(null);
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>使用Get請求方式取得回應字串</title>
+</head>
+<body>
+
+帳號:<input type="text" name="memeName" id="memId">
+<input type="button" value="取得名字" id="btn">
+
+<div id="showPanel">
+</div>
+
+<script>
+    function getInfo() {
+
+        //產生xhr物件
+        let xhr = new XMLHttpRequest() // readyState: 0
+
+        //設定好回呼函數
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == XMLHttpRequest.DONE) {
+                if (xhr.status == 200) {
+                    document.getElementById('showPanel').innerText = xhr.responseText;
+                } else {
+                    alert(xhr.status);
+                }
+            }
+        }
+        //建立好Get連接與送出請求
+        let URL = `GetResponseText.jsp?memeName=${document.getElementById('memId').value}`;
+        xhr.open('get', URL, true);
+        xhr.send(null);
+    }; //function
+
+    window.addEventListener("load", function () {
+        document.getElementById("btn").onclick = getInfo;
+    }, false);
+</script>
+</body>
+</html>
+
