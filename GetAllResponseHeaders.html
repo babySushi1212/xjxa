@@ -6,43 +6,41 @@
 </head>
 <body>
 
-<input type="button" value="getAllResponseHeaders"
-       onclick="getAllResponseHeaders()">
+<!--<input type="button" value="getAllResponseHeaders" onclick="getAllResponseHeaders()">-->
+<input type="button" value="getAllResponseHeaders">
 <div id="showPanel"></div>
 
 <script>
-    let xhr = null;
+    document.querySelector('input').addEventListener('click', () => {
+        /**
+         * create xhr
+         * set XMLHttpRequest call back function
+         * open GET connection to XML server
+         * send request
+         */
+
+        const xhr = new XMLHttpRequest() // readyState: 0
+        xhr.onreadystatechange = stateChanged;
+        xhr.open('get', 'GetAllResponseHeaders.jsp', true); // readyState: 1
+        xhr.send(); // readyState: 2
+    })
 
     function stateChanged() {
-        lookup = ['UNSENT', 'OPENED', 'HEADERS_RECEIVED', 'LOADING', 'DONE' ]
-        console.log('xhr state', lookup[xhr.readyState], 'xhr readyState', xhr.readyState);
+        // this is call back for XMLHttpRequest, so "this" represent xhr object
+        const lookup = ['UNSENT', 'OPENED', 'HEADERS_RECEIVED', 'LOADING', 'DONE']
+        console.log('xhr state', lookup[this.readyState], 'this readyState', this.readyState);
 
         //server端處理完畢了没
-        if (xhr.readyState == XMLHttpRequest.DONE) {
-
-            //request做成功了嗎
-            if (xhr.status == 200) {
-                alert(xhr.getAllResponseHeaders());
+        if (this.readyState == XMLHttpRequest.DONE) {
+            // did request success?
+            if (this.status == 200) {
+                alert(this.getAllResponseHeaders());
             } else {
-                alert(xhr.status);
+                alert(this.status);
             }
         }
-
     }
 
-    function getAllResponseHeaders() {
-
-        xhr = new XMLHttpRequest() // readyState: 0
-
-        // set XMLHttpRequest call back function
-        xhr.onreadystatechange = stateChanged;
-
-        //建立好Get連接
-        xhr.open('get', 'GetAllResponseHeaders.jsp', true); // readyState: 1
-
-        //送出請求
-        xhr.send(); // readyState: 2
-    }
 </script>
 </body>
 </html>

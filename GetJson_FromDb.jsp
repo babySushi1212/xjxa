@@ -1,35 +1,28 @@
-﻿<%@page contentType="text/html;charset=utf-8"  language="java" import="java.sql.*" errorPage=""%> 
-<%@page import="org.json.JSONObject"%>
+﻿<%@page contentType="text/html;charset=utf-8" language="java" import="java.sql.*" errorPage="" %>
+<%@page import="org.json.JSONObject" %>
 <%
-//取得前端送來的資料 
 
-  
+    JSONObject empJson = new JSONObject();
 
-//載入JDBC驅動程式類別 
-//Class.forName("com.mysql.cj.jdbc.Driver");
-//Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/JDBCSample?serverTimezone=Asia/Taipei","David", "123456");
-  
-//建立PreparedStatement物件 
+    Class.forName("com.mysql.cj.jdbc.Driver");
+    try (
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/db01?serverTimezone=Asia/Taipei",
+                    "root",
+                    "abcd1234");
 
-//代入資料    
- 
-//執行PreparedStatement
-
-  
-//取回一筆資料
-
-  
-//將資料轉成JSONObject		 
-
-  
-//輸出JSONObject
-
-//關閉ResultSet物件 	
-
-//關閉Statement物件    
-
-//關閉Connection物件 	 
- 
-%>   
+            PreparedStatement STMT = conn.prepareStatement("SELECT * FROM emp2 WHERE empno = ?");
+    ) {
+        // put front-end request empno into PreparedStatement sql query comment
+        STMT.setInt(1, Integer.parseInt(request.getParameter("empno")));
+        try (ResultSet rs = STMT.executeQuery()) {
+            while (rs.next()) {
+                empJson.put("name", rs.getString("ENAME"));
+                empJson.put("job", rs.getString("JOB"));
+                empJson.put("salary", rs.getDouble("SAL"));
+            }
+        }
+    }
+    out.print(empJson);
+%>
 
 

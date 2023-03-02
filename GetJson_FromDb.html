@@ -1,61 +1,84 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-<meta charset="utf-8">
-<title>使用GET請求方式取得JSON回應字串</title>			   
-<style> 
-.empTable { border-collapse:collapse}
-.empTable th{ background-color:#BFBFFF;
-                color:blue;	
-				text-align:right;
-				border-style:dotted;
-				font-weight:normal;
-				padding : 5px;
-		     }  
-.empTable td{
-	          border:2px dotted deepPink;
-			  padding:5px; 
-		     }    				
-			 
-</style>  
-<!-- <script src="json.js"></script> --> 
+    <meta charset="utf-8">
+    <title>Communicate with DB by JSON</title>
+    <style>
+        .empTable {
+            margin-left: 40%;
+            border-collapse: collapse
+        }
+
+        .empTable th {
+            background-color: #BFBFFF;
+            color: blue;
+            text-align: right;
+            border-style: dotted;
+            font-weight: normal;
+            padding: 5px;
+        }
+
+        .empTable td {
+            border: 2px dotted deepPink;
+            padding: 5px;
+        }
+
+        span {
+            margin-left: 40%;
+        }
+    </style>
+    <!-- <script src="json.js"></script> -->
 </head>
 <body>
-<table align="center">
-<tr><td>員工帳號</td>
-    <td><input type="text" name="empno" id="empno">( 7566 )</td> 
-</tr>
-<tr><td colspan="2" align="center">
-    <input type="button" value="取得員工資料" onClick="getEmployee();">	
-    </td>
-</tr>
-</table>	
-<div id="showPanel">
-</div> 	
-<script>  
-function showEmployee(json){
-  //剖析json字串,將其轉成js物件
+<span>
+    <input type="text" name="empno" id="empno">
+    <input id="query" type="button" value="Get Employee Info">
+</span>
+<div id="showPanel"></div>
 
-}
+<script>
+    document.querySelector('#query').addEventListener('click', () => {
+        const xhr = new XMLHttpRequest();
+        xhr.onload = () => {
+            if (xhr.status == 200) {
+                showEmployee(xhr.responseText);
+            } else {
+                alert(xhr.status);
+            }
+        };//onload
 
-function getEmployee(){ 
-  let xhr = new XMLHttpRequest();
-  //設定好回呼函數   
-  xhr.onload = function (){
-      if( xhr.status == 200){
-        document.getElementById("showPanel").innerHTML = xhr.responseText;
-        //showEmployee(xhr.responseText);
-      }else{
-        alert( xhr.status );
-      }//xhr.status == 200
-  };//onload 
-  
-  //建立好Get連接
-  let url= "GetJson_FromDb.jsp?empno=" + document.getElementById("empno").value;
-  xhr.open("Get",url,true); 
-  //送出請求 
-  xhr.send( null );
-}
+        const empNo = document.getElementById("empno").value;
+        if (empNo){
+            xhr.open("Get",
+                `GetJson_FromDb.jsp?empno=${empNo}`,
+                true);
+            xhr.send(null);
+        }
+    })
+
+    function showEmployee(json) {
+        const emp = JSON.parse(json)
+        const showPanel = document.querySelector('#showPanel');
+        if (!emp.name) {
+            showPanel.innerHTML = `<span>查無此資料</span>`;
+            return;
+        }
+        showPanel.innerHTML = `
+        <table class="empTable">
+              <tr>
+                 <th>NAME</th>
+                 <td>${emp.name}</td>
+              </tr>
+              <tr>
+                 <th>JOB</th>
+                 <td>${emp.job}</td>
+              </tr>
+              <tr>
+                 <th>SAL</th>
+                 <td>${emp.salary}</td>
+              </tr>
+        </table>`
+    }
 
 </script>
 </body>

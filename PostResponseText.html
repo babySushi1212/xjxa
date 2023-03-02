@@ -8,38 +8,40 @@
 <body>
 
 帳號:<input type="text" name="memeName" id="memId">
-<input type="button" value="取得名字" id="btn">
+<input type="button" value="Get Name" id="btn">
 
 <div id="showPanel">
 </div>
 <script>
-    function getInfo() {
-        let xhr = new XMLHttpRequest();
-        //設定好回呼函數
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState == 4) {
+
+    window.addEventListener("load", function () {
+        document.getElementById("btn").addEventListener('click', () => {
+            /**
+             * create xhr
+             * set XMLHttpRequest call back function
+             * open POST connection to XML server
+             * send request
+             * @type {XMLHttpRequest}
+             */
+            const xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState != 4) {
+                    return;
+                }
                 if (xhr.status == 200) {
-                    document.getElementById("showPanel").innerHTML =
-                        xhr.responseText;
+                    document.getElementById("showPanel").innerHTML = xhr.responseText;
                 } else {
                     alert(xhr.status);
                 }//xhr.status == 200
             }//xhr.readyState == 4
-        }//onreadystatechange
 
-        //建立好Post連接
-        xhr.open("post", 'PostResponseText.jsp', true);
-        xhr.setRequestHeader('content-type', 'application/x-www-form-urlencoded');
+            xhr.open("post", 'PostResponseText.jsp', true);
+            xhr.setRequestHeader('content-type', 'application/x-www-form-urlencoded');
+            xhr.send(`memeName=${document.getElementById('memId').value}`);
 
-        //送出請求
-        const dataInfo = `memeName=${document.getElementById('memId').value}`
-        xhr.send(dataInfo);
+        });
+    });
 
-    }//function
-
-    window.addEventListener("load", function () {
-        document.getElementById("btn").onclick = getInfo;
-    }, false);
 </script>
 </body>
 </html>
